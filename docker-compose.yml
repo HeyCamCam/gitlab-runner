@@ -1,0 +1,28 @@
+version: '3'
+services:
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    container_name: gitlab-runner
+    restart: unless-stopped
+    environment:
+      - PROJECT_REGISTRATION_TOKEN="REPLACE_ME"
+      - EXECUTOR="Docker"
+      - DOCKER_IMAGE="alpine"
+      - DESCRIPTION="docker-runner"
+      - TAG_LIST="docker, linux"
+      - RUN_UNTAGGED="true"
+      - LOCKED="false"
+      - ACCESS_LEVEL="not_protected"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: register \
+      --non-interactive \
+      --url "https://gitlab.com/" \
+      --registration-token "$PROJECT_REGISTRATION_TOKEN" \
+      --executor "$EXECUTOR" \
+      --docker-image "$DOCKER_IMAGE" \
+      --description "$DESCRIPTION" \
+      --tag-list "$TAG_LIST" \
+      --run-untagged "$RUN_UNTAGGED" \
+      --locked "$LOCKED" \
+      --access-level "$ACCESS_LEVEL"
